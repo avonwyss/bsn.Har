@@ -14,6 +14,7 @@ namespace bsn.Har.AspNetCore.Server {
 			this.RawTarget = request.Url.OriginalString;
 			this.Scheme = request.Url.Scheme;
 			this.Body = string.IsNullOrEmpty(request.PostData?.Text) ? Stream.Null : request.PostData.GetContentStream();
+			this.headers = new HeaderDictionary(request.Headers.Count);
 			foreach (var header in request.Headers) {
 				this.Headers.Add(header.Name, header.Value);
 			}
