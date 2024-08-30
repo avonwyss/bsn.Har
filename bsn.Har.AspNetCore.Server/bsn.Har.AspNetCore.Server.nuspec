@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+	<metadata>
+		<id>bsn.Har.AspNetCore.Server</id>
+		<version>1.0.0</version>
+		<authors>avonwyss</authors>
+		<owners>avonwyss</owners>
+		<license type="expression">MIT</license>
+		<projectUrl>https://github.com/avonwyss/bsn.Har</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>.NET Library for implementing a ASP.NET Core server for handling HAR requests and responses</description>
+		<copyright>Copyright 2024 Arsène von Wyss</copyright>
+		<tags>bsn HAR</tags>
+		<dependencies>
+			<dependency id="Microsoft.AspNetCore.Hosting.Abstractions" version="2.2.0" />
+			<dependency id="Microsoft.AspNetCore.Http" version="2.2.0" />
+			<dependency id="Microsoft.Extensions.Options" version="2.2.0" />
+			<dependency id="System.Threading.Tasks.Extensions" version="4.5.4" />
+			<dependency id="System.ValueTuple" version="4.5.0" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\$Configuration$\bsn.Har.AspNetCore.Server.*" target="lib" />
+	</files>
+</package>
