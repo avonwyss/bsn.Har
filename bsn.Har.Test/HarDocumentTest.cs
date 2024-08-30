@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 using Newtonsoft.Json;
@@ -16,7 +16,7 @@ namespace bsn.Har {
 
 		[Fact]
 		public void ParseDocument() {
-			output.WriteLine(HarDocument.Serializer.Deserialize<HarDocument>(new JsonTextReader(new StringReader(
+			this.output.WriteLine(HarDocument.Serializer.Deserialize<HarDocument>(new JsonTextReader(new StringReader(
 					@"{
 	""log"": {
 		""version"": ""1.1"", 

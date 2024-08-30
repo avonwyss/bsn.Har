@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 
 namespace bsn.Har.Handler {
 	public abstract partial class SegmentMatcher {
@@ -14,9 +14,9 @@ namespace bsn.Har.Handler {
 			}
 
 			protected internal override bool TryMatch(string segment, ref IImmutableDictionary<string, object> arguments) {
-				if (tryParse(segment, out var result)) {
-					if (!string.IsNullOrEmpty(key)) {
-						arguments = arguments.Add(key, result);
+				if (this.tryParse(segment, out var result)) {
+					if (!string.IsNullOrEmpty(this.key)) {
+						arguments = arguments.Add(this.key, result);
 					}
 					return true;
 				}
@@ -24,7 +24,7 @@ namespace bsn.Har.Handler {
 			}
 
 			public override bool Equals(SegmentMatcher other) {
-				return other is ParseMatcher<T> matcher && matcher.key == key && matcher.tryParse.Equals(tryParse);
+				return other is ParseMatcher<T> matcher && matcher.key == this.key && matcher.tryParse.Equals(this.tryParse);
 			}
 		}
 	}

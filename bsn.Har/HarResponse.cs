@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -72,9 +72,9 @@ namespace bsn.Har {
 			}
 
 			public byte[] ToByteArray() {
-				return Encoding == "base64"
-						? Convert.FromBase64String(Text)
-						: System.Text.Encoding.UTF8.GetBytes(Text);
+				return this.Encoding == "base64"
+						? Convert.FromBase64String(this.Text)
+						: System.Text.Encoding.UTF8.GetBytes(this.Text);
 			}
 		}
 

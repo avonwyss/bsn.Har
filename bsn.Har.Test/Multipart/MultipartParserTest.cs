@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -54,12 +54,12 @@ namespace bsn.Har.Multipart {
 			List<string> names = new List<string>(partNames.Length);
 			foreach (var param in MultipartParser.Parse(stream, boundary)) {
 				names.Add(param.Name);
-				output.WriteLine("--Part "+names.Count+"--");
-				output.WriteLine(param.Name ?? "(NULL)");
-				output.WriteLine((param.ContentType ?? "text/plain")+" "+param.Encoding);
-				output.WriteLine(param.Value ?? "(NULL)");
+				this.output.WriteLine("--Part "+names.Count+"--");
+				this.output.WriteLine(param.Name ?? "(NULL)");
+				this.output.WriteLine((param.ContentType ?? "text/plain")+" "+param.Encoding);
+				this.output.WriteLine(param.Value ?? "(NULL)");
 			}
-			output.WriteLine("--End--");
+			this.output.WriteLine("--End--");
 			Assert.Equal(partNames, names);
 		}
 	}

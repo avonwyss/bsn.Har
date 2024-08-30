@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -13,7 +13,7 @@ namespace bsn.Har.Handler {
 			this.Request = request;
 			this.pathArguments = pathArguments;
 			request.ParseQueryString();
-			queryArguments = ImmutableDictionary<string, string>.Empty
+			this.queryArguments = ImmutableDictionary<string, string>.Empty
 					.WithComparers(StringComparer.OrdinalIgnoreCase)
 					.AddRange(request.QueryString.Select(q => new KeyValuePair<string, string>(q.Name, q.Value)));
 		}
@@ -27,10 +27,10 @@ namespace bsn.Har.Handler {
 		}
 
 		public bool TryGetFromPath<T>(string key, out T value) {
-			if (pathArguments.TryGetValue(key, out var pathValue)) {
+			if (this.pathArguments.TryGetValue(key, out var pathValue)) {
 				value = pathValue is T typedValue 
 						? typedValue 
-						: ChangeType<T>(pathValue);
+						: this.ChangeType<T>(pathValue);
 				return true;
 			}
 			value = default;
@@ -38,10 +38,10 @@ namespace bsn.Har.Handler {
 		}
 
 		public bool TryGetFromQuery<T>(string key, out T value) {
-			if (queryArguments.TryGetValue(key, out var queryValue)) {
+			if (this.queryArguments.TryGetValue(key, out var queryValue)) {
 				value = queryValue is T typedValue 
 						? typedValue 
-						: ChangeType<T>(queryValue);
+						: this.ChangeType<T>(queryValue);
 				return true;
 			}
 			value = default;
@@ -49,11 +49,11 @@ namespace bsn.Har.Handler {
 		}
 
 		public bool TryGetFromHeader<T>(string key, out T value) {
-			var header = Request.Headers.SingleOrDefault(p => string.Equals(p.Name, key, StringComparison.OrdinalIgnoreCase));
+			var header = this.Request.Headers.SingleOrDefault(p => string.Equals(p.Name, key, StringComparison.OrdinalIgnoreCase));
 			if (header != null) {
 				value = header.Value is T typedValue 
 						? typedValue 
-						: ChangeType<T>(header.Value);
+						: this.ChangeType<T>(header.Value);
 				return true;
 			}
 			value = default;
@@ -61,12 +61,12 @@ namespace bsn.Har.Handler {
 		}
 
 		public virtual bool TryGetFromContent<T>(string key, out T value) {
-			if (Request.ParsePostData()) {
-				var param = Request.PostData.Params.SingleOrDefault(p => string.Equals(p.Name, key, StringComparison.OrdinalIgnoreCase));
+			if (this.Request.ParsePostData()) {
+				var param = this.Request.PostData.Params.SingleOrDefault(p => string.Equals(p.Name, key, StringComparison.OrdinalIgnoreCase));
 				if (param != null) {
 					value = param.Value is T typedValue 
 							? typedValue 
-							: ChangeType<T>(param.Value);
+							: this.ChangeType<T>(param.Value);
 					return true;
 				}
 			}

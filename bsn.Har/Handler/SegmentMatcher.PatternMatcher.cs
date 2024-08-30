@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -35,10 +35,10 @@ namespace bsn.Har.Handler {
 			}
 
 			protected internal override bool TryMatch(string segment, ref IImmutableDictionary<string, object> arguments) {
-				var match = pattern.Match(segment);
+				var match = this.pattern.Match(segment);
 				if (match.Success) {
 					var newArguments = arguments;
-					foreach (var matcher in matchers) {
+					foreach (var matcher in this.matchers) {
 						var group = match.Groups[matcher.Key];
 						if (!group.Success || !matcher.Value.TryMatch(group.Value, ref newArguments)) {
 							return false;
@@ -51,7 +51,7 @@ namespace bsn.Har.Handler {
 			}
 
 			public override bool Equals(SegmentMatcher other) {
-				return other is PatternMatcher matcher && string.Equals(matcher.pattern.ToString(), pattern.ToString(), StringComparison.Ordinal);
+				return other is PatternMatcher matcher && string.Equals(matcher.pattern.ToString(), this.pattern.ToString(), StringComparison.Ordinal);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 
 namespace bsn.Har.Handler {
@@ -11,14 +11,14 @@ namespace bsn.Har.Handler {
 			}
 
 			protected internal override bool TryMatch(string segment, ref IImmutableDictionary<string, object> arguments) {
-				if (!string.IsNullOrEmpty(key)) {
-					arguments = arguments.Add(key, segment);
+				if (!string.IsNullOrEmpty(this.key)) {
+					arguments = arguments.Add(this.key, segment);
 				}
 				return true;
 			}
 
 			public override bool Equals(SegmentMatcher other) {
-				return other is AnyMatcher matcher && matcher.key == key;
+				return other is AnyMatcher matcher && matcher.key == this.key;
 			}
 		}
 	}

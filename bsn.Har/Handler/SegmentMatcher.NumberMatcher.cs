@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Globalization;
 
@@ -20,9 +20,9 @@ namespace bsn.Har.Handler {
 			}
 
 			protected internal override bool TryMatch(string segment, ref IImmutableDictionary<string, object> arguments) {
-				if (tryParse(segment, styles, provider, out T result)) {
-					if (!string.IsNullOrEmpty(key)) {
-						arguments = arguments.Add(key, result);
+				if (this.tryParse(segment, this.styles, this.provider, out T result)) {
+					if (!string.IsNullOrEmpty(this.key)) {
+						arguments = arguments.Add(this.key, result);
 					}
 					return true;
 				}
@@ -30,7 +30,7 @@ namespace bsn.Har.Handler {
 			}
 
 			public override bool Equals(SegmentMatcher other) {
-				return other is NumberMatcher<T> matcher && matcher.key == key && matcher.tryParse.Equals(tryParse) && matcher.styles == styles && matcher.provider == provider;
+				return other is NumberMatcher<T> matcher && matcher.key == this.key && matcher.tryParse.Equals(this.tryParse) && matcher.styles == this.styles && matcher.provider == this.provider;
 			}
 		}
 	}

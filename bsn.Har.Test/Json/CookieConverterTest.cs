@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 
 using Newtonsoft.Json;
@@ -16,7 +16,7 @@ namespace bsn.Har.Json {
 
 		[Fact]
 		public void SerializeCookie() {
-			output.WriteLine(JsonConvert.SerializeObject(
+			this.output.WriteLine(JsonConvert.SerializeObject(
 					new Cookie() {
 							Name = "Crunchy",
 							Value = "Crispy",
@@ -28,7 +28,7 @@ namespace bsn.Har.Json {
 
 		[Fact]
 		public void DeserializeCookie() {
-			output.WriteLine(JsonConvert.DeserializeObject<Cookie[]>(
+			this.output.WriteLine(JsonConvert.DeserializeObject<Cookie[]>(
 					@"[{
   ""name"": ""Crunchy"",
   ""value"": ""Crispy"",

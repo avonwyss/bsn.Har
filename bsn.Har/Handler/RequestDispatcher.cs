@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -18,14 +18,14 @@ namespace bsn.Har.Handler {
 
 		internal bool TryHandle(HarRequest request, IImmutableStack<string> segments, IImmutableDictionary<string, object> pathArguments, TState state, out HarResponse response, ICollection<string> allowedMethods) {
 			if (!segments.IsEmpty) {
-				foreach (var matcher in matchers) {
+				foreach (var matcher in this.matchers) {
 					var newPathArguments = pathArguments;
 					if (matcher.matcher.TryMatch(segments.Peek(), ref newPathArguments) && matcher.handler.TryHandle(request, segments.Pop(), newPathArguments, state, out response, allowedMethods)) {
 						return true;
 					}
 				}
 			}
-			foreach (var method in methods) {
+			foreach (var method in this.methods) {
 				var isWildcard = string.IsNullOrEmpty(method.wildcard);
 				if (segments.IsEmpty || !isWildcard) {
 					if (string.Equals(method.method, request.Method.Method, StringComparison.OrdinalIgnoreCase)) {
@@ -43,18 +43,18 @@ namespace bsn.Har.Handler {
 		}
 
 		public SegmentDispatcher<TState> Segment(SegmentMatcher matcher) {
-			foreach (var tuple in matchers) {
+			foreach (var tuple in this.matchers) {
 				if (tuple.matcher.Equals(matcher)) {
 					return tuple.handler;
 				}
 			}
-			var handler = new SegmentDispatcher<TState>(requestDispatcher);
-			matchers.Add((matcher, handler));
+			var handler = new SegmentDispatcher<TState>(this.requestDispatcher);
+			this.matchers.Add((matcher, handler));
 			return handler;
 		}
 
 		public void Add(HttpMethod method, Func<HarRequest, IImmutableDictionary<string, object>, TState, HarResponse> handler, string wildcard) {
-			methods.Add((method.Method, handler, wildcard));
+			this.methods.Add((method.Method, handler, wildcard));
 		}
 	}
 
@@ -65,7 +65,7 @@ namespace bsn.Har.Handler {
 		private readonly SegmentDispatcher<TState> root;
 
 		public RequestDispatcher() {
-			root = new SegmentDispatcher<TState>(this);
+			this.root = new SegmentDispatcher<TState>(this);
 		}
 
 		public void RegisterRoute(Func<HarRequest, IImmutableDictionary<string, object>, TState, HarResponse> handler, HttpMethod method, params SegmentMatcher[] route) {
@@ -75,7 +75,7 @@ namespace bsn.Har.Handler {
 			if (handler == null) {
 				throw new ArgumentNullException(nameof(handler));
 			}
-			var dispatcher = root;
+			var dispatcher = this.root;
 			string wildcard = null;
 			foreach (var matcher in route) {
 				if (wildcard != null) {
@@ -136,13 +136,13 @@ namespace bsn.Har.Handler {
 					segments = segments.Push(Uri.UnescapeDataString(urlSegments[i].TrimEnd('/').Replace('+', ' ')));
 				}
 				var allowedMethods = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-				return root.TryHandle(request, segments, ImmutableDictionary<string, object>.Empty, state, out var response, allowedMethods)
+				return this.root.TryHandle(request, segments, ImmutableDictionary<string, object>.Empty, state, out var response, allowedMethods)
 						? response
 						: allowedMethods.Count == 0
-								? NotFound(request)
-								: MethodNotAllowed(request, allowedMethods.Select(a => a.ToUpperInvariant()).OrderBy(a => a));
+								? this.NotFound(request)
+								: this.MethodNotAllowed(request, allowedMethods.Select(a => a.ToUpperInvariant()).OrderBy(a => a));
 			} catch (Exception ex) {
-				return Exception(request, ex);
+				return this.Exception(request, ex);
 			}
 		}
 	}
