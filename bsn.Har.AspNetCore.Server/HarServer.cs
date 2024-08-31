@@ -1,13 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
 
@@ -32,8 +31,9 @@ namespace bsn.Har.AspNetCore.Server {
 
 		public IFeatureCollection Features { get; } = new FeatureCollection();
 
-		public ValueTask<HarResponse> Process(HarRequest request) {
-			return (this.handler ?? throw new InvalidOperationException("Server is not started")).Process(request);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public ValueTask<HarResponse> ProcessAsync(HarRequest request, Action<FeatureCollection> setRequestFeatures = null) {
+			return (this.handler ?? throw new InvalidOperationException("Server is not started")).ProcessAsync(request, setRequestFeatures);
 		}
 
 		public void Dispose() { }
