@@ -85,15 +85,19 @@ namespace bsn.Har.AspNetCore.Server {
 			var response = new HarResponse() {
 					Status = (HttpStatusCode)this.StatusCode
 			};
-			foreach (var header in this.Headers) {
-				response.Headers.Add(new HarNameValue() {
-						Name = header.Key,
-						Value = header.Value
-				});
-			}
 			if (this.body.Length > 0) {
 				this.body.Seek(0, SeekOrigin.Begin);
 				response.Content = this.body;
+			}
+			foreach (var header in this.Headers) {
+				if (string.Equals(header.Key, "Content-Type", StringComparison.OrdinalIgnoreCase) && response.Content != null) {
+					response.Content.MimeType = header.Value;
+				} else {
+					response.Headers.Add(new HarNameValue() {
+							Name = header.Key,
+							Value = header.Value
+					});
+				}
 			}
 			await this.InvokeCallbacks(true).ConfigureAwait(false);
 			return response;
